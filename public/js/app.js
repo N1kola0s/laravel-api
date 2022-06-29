@@ -37645,10 +37645,7 @@ var render = function () {
               return _c("div", { key: post.id, staticClass: "col" }, [
                 _c("div", { staticClass: "product card" }, [
                   _c("img", {
-                    attrs: {
-                      src: "storage" + post.cover_image,
-                      alt: post.title,
-                    },
+                    attrs: { src: "storage/" + post.cover, alt: post.title },
                   }),
                   _vm._v(" "),
                   _c("div", { staticClass: "card-body" }, [

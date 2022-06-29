@@ -1,6 +1,6 @@
 <template>
   <div>
-    
+
     <work-in-progress></work-in-progress>
 
     <section class="posts">
@@ -8,7 +8,7 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 my-5">
           <div class="col" v-for="post in postsResponse.data" :key="post.id">
             <div class="product card">
-              <img :src="'storage' + post.cover_image" :alt="post.title" />
+              <img :src="'storage/' + post.cover" :alt="post.title" />
 
               <div class="card-body">
                 <h3>{{ post.title }}</h3>
