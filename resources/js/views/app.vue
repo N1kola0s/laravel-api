@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <work-in-progress></work-in-progress>
 
     <section class="posts">
