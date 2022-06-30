@@ -2052,6 +2052,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
@@ -2061,7 +2071,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       postsResponse: "",
-      categories: ''
+      categories: '',
+      tags: ''
     };
   },
   methods: {
@@ -2090,12 +2101,30 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (e) {
         console.error(e);
       });
+    },
+    getAllTags: function getAllTags() {
+      var _this3 = this;
+
+      axios.get('/api/tags').then(function (response) {
+        /* console.log(response); */
+        _this3.tags = response.data;
+      })["catch"](function (e) {
+        console.error(e);
+      });
+    },
+    trimText: function trimText(text) {
+      if (text.length > 1) {
+        return text.slice(0, 1) + "...<a>read more</a>";
+      }
+
+      return text;
     }
   },
   mounted: function mounted() {
     /* console.log('mounted'); */
     this.getAllPosts(1);
     this.getAllCategories();
+    this.getAllTags();
   }
 });
 
@@ -37740,7 +37769,7 @@ var render = function () {
                         _c("div", { staticClass: "card-body" }, [
                           _c("h3", [_vm._v(_vm._s(post.title))]),
                           _vm._v(" "),
-                          _c("p", [_vm._v(_vm._s(post.content))]),
+                          _c("p", [_vm._v(_vm._s(_vm.trimText(post.content)))]),
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "card-footer" }, [
@@ -37907,6 +37936,22 @@ var render = function () {
                       "\n              " +
                         _vm._s(category.name) +
                         "\n            "
+                    ),
+                  ])
+                }),
+                0
+              ),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "tags" }, [
+              _c("h4", [_vm._v("Tags:")]),
+              _vm._v(" "),
+              _c(
+                "ul",
+                _vm._l(_vm.tags, function (tag) {
+                  return _c("li", { key: tag.id }, [
+                    _vm._v(
+                      "\n              " + _vm._s(tag.name) + "\n            "
                     ),
                   ])
                 }),

@@ -18,7 +18,7 @@
 
                     <div class="card-body">
                       <h3>{{ post.title }}</h3>
-                      <p>{{ post.content }}</p>
+                      <p>{{trimText(post.content)}}</p>
                     </div>
                     <!-- .card-body -->
 
@@ -111,6 +111,16 @@
             </ul>
           </div>
           <!-- /.categories -->
+
+          <div class="tags">
+            <h4>Tags:</h4>
+            <ul> 
+              <li v-for="tag in tags" :key="tag.id">
+                {{tag.name}}
+              </li>
+            </ul>
+          </div>
+          <!-- /.categories -->
         </aside>
         <!-- /aside -->
 
@@ -132,7 +142,8 @@
     data() {
       return {
         postsResponse: "",
-        categories:''
+        categories:'',
+        tags:''
       };
     },
     methods: {
@@ -162,12 +173,30 @@
         .catch(e =>{
           console.error(e);
         })
+      },
+      getAllTags(){
+        axios
+        .get('/api/tags')
+        .then(response =>{
+          /* console.log(response); */
+          this.tags=response.data;
+        })
+        .catch(e =>{
+          console.error(e);
+        })
+      },
+      trimText(text){
+        if(text.length > 1){
+          return text.slice(0, 1) + `...<a>read more</a>`
+        }
+        return text;
       }
     },
     mounted() {
       /* console.log('mounted'); */
       this.getAllPosts(1);
       this.getAllCategories();
+      this.getAllTags();
     },
   };
 </script>
