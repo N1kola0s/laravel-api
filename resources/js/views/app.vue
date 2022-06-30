@@ -1,93 +1,173 @@
 <template>
   <div>
+    <banner-component></banner-component>
 
-    <work-in-progress></work-in-progress>
+    <div class="container-fluid">
 
-    <section class="posts">
-      <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 my-5">
-          <div class="col" v-for="post in postsResponse.data" :key="post.id">
-            <div class="product card">
-              <img :src="'storage/' + post.cover" :alt="post.title" />
+      <div class="row">
 
-              <div class="card-body">
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.content }}</p>
-              </div>
-              <!-- .card-body -->
+        <main class="col-12 col-md-9">
 
-              <div class="card-footer">
-                <div class="col">
-                  <span>
-                    <strong> Author: </strong>
 
-                    Io me e me stesso
-                  </span>
-                </div>
-                <!-- .col -->
+          <section class="posts py-5">
+            <div class="container">
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 my-5">
+                <div class="col" v-for="post in postsResponse.data" :key="post.id">
+                  <div class="product card">
+                    <img :src="'storage/' + post.cover" :alt="post.title" />
 
-                <div class="col">
-                  <span v-if="post.category">
-                    <strong> Category: </strong>
+                    <div class="card-body">
+                      <h3>{{ post.title }}</h3>
+                      <p>{{ post.content }}</p>
+                    </div>
+                    <!-- .card-body -->
 
-                    {{ post.category.name }}
-                  </span>
+                    <div class="card-footer">
+                      <div class="col">
+                        <span>
+                          <strong> Author: </strong>
 
-                  <div class="tags" v-if="post.tags.length > 0">
-                    <strong> Tags: </strong>
+                          Io me e me stesso
+                        </span>
+                      </div>
+                      <!-- .col -->
 
-                    <span v-for="tag in post.tags" :key="tag.id">
-                      <a href="#">{{ tag.name }}</a> - 
-                    </span>
+                      <div class="col">
+                        <span v-if="post.category">
+                          <strong> Category: </strong>
+
+                          {{ post.category.name }}
+                        </span>
+
+                        <div class="tags" v-if="post.tags.length > 0">
+                          <strong> Tags: </strong>
+
+                          <span v-for="tag in post.tags" :key="tag.id">
+                            <a href="#">{{ tag.name }}</a> -
+                          </span>
+                        </div>
+                        <!-- /.tags -->
+                      </div>
+                      <!-- /.col -->
+                    </div>
+                    <!-- /.card-footer -->
                   </div>
-                  <!-- /.tags -->
+                  <!-- /.product  -->
                 </div>
                 <!-- /.col -->
               </div>
-              <!-- /.card-footer -->
+              <!-- /.row -->
+
+              <nav aria-label="Page navigation" class="py-5">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" v-if="postsResponse.current_page > 1">
+                    <a
+                      class="page-link"
+                      href="#"
+                      aria-label="Previous"
+                      @click.prevent="getAllPosts(postsResponse.current_page - 1)"
+                    >
+                      <span aria-hidden="true">&laquo;</span>
+                      <span>Previous</span>
+                    </a>
+                  </li>
+                  <li :class="{'page-item' : true, 'active':page==postsResponse.current_page}" v-for="page in postsResponse.last_page" :key="page.id">
+                    <a class="page-link" href="#" @click.prevent="getAllPosts(page)">{{ page }}</a>
+                  </li>
+
+                  <li
+                    class="page-item"
+                    v-if="postsResponse.current_page < postsResponse.last_page"
+                  >
+                    <a
+                      class="page-link"
+                      href="#"
+                      aria-label="Next"
+                      @click.prevent="getAllPosts(postsResponse.current_page + 1)"
+                    >
+                      <span aria-hidden="true">&raquo;</span>
+                      <span>Next</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+              <!-- /nav -->
             </div>
-            <!-- /.product  -->
+            <!-- /.container -->
+          </section>
+          <!-- /.posts -->
+
+        </main>
+        <!-- /main -->
+
+
+        <aside class="bg-white p-2 col-12- col-md-3 my-5">
+          <div class="categories">
+            <h4>Categorie:</h4>
+            <ul> 
+              <li v-for="category in categories" :key="category.id">
+                {{category.name}}
+              </li>
+            </ul>
           </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
+          <!-- /.categories -->
+        </aside>
+        <!-- /aside -->
+
       </div>
-      <!-- /.container -->
-    </section>
-    <!-- /.posts -->
+      <!-- /.row -->
+
+    </div>
+
   </div>
 </template>
 
 <script>
-import WorkInProgress from "../components/WorkInProgress";
-export default {
-  name: "App",
-  components: {
-    WorkInProgress,
-  },
-  data() {
-    return {
-      posts: "",
-      postsResponse: "",
-    };
-  },
-  methods: {
-    getAllPosts() {
-      axios
-        .get("/api/posts")
-        .then((response) => {
-          /* console.log(response.data.data); */
-          this.posts = response.data.data;
-          this.postsResponse = response.data;
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+  import BannerComponent from '../components/BannerComponent';
+  export default {
+    name: "App",
+    components: {
+      BannerComponent,
     },
-  },
-  mounted() {
-    /* console.log('mounted'); */
-    this.getAllPosts();
-  },
-};
+    data() {
+      return {
+        postsResponse: "",
+        categories:''
+      };
+    },
+    methods: {
+      getAllPosts(postPage) {
+        axios
+          .get("/api/posts", {
+            params: {
+              page: postPage,
+            }
+          })
+          .then((response) => {
+            /* console.log(response.data.data); */
+            /* this.posts = response.data.data; */
+            this.postsResponse = response.data;
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      },
+      getAllCategories(){
+        axios
+        .get('/api/categories')
+        .then(response =>{
+          /* console.log(response); */
+          this.categories=response.data;
+        })
+        .catch(e =>{
+          console.error(e);
+        })
+      }
+    },
+    mounted() {
+      /* console.log('mounted'); */
+      this.getAllPosts(1);
+      this.getAllCategories();
+    },
+  };
 </script>

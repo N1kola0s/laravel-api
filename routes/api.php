@@ -22,7 +22,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('posts', function(){
-    $posts = Post::with(['tags', 'category'])->orderByDesc('id')->paginate(9);
+/* Route::get('posts', function(){
+    $posts = Post::with(['tags', 'category'])->orderByDesc('id')->paginate(6);
     return $posts;
-});
+}); */
+
+Route::get('posts', 'API\PostController@index');
+Route::get('categories', 'API\CategoryController@index');

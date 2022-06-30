@@ -7,6 +7,6 @@
 
 export default {
     
-    name:'WorkInProgress'
+    name:'BannerComponent'
 }
 </script>
