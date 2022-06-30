@@ -2114,7 +2114,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     trimText: function trimText(text) {
       if (text.length > 1) {
-        return text.slice(0, 1) + "...<a>read more</a>";
+        return text.slice(0, 1) + '...';
       }
 
       return text;
